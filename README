@@ -1,11 +1,16 @@
-<div align="center">
-Internship Placement Management System <br/><br/> SC2002 Project
-</div> <br/>
-Overview
+# Internship Placement Management System
+### SC2002 Project
 
-The system is a Java console application developed for the SC2002 Object-Oriented Design & Programming course at Nanyang Technological University. The system acts as a centralized hub for Students, Company Representatives, and Career Center Staff, streamlining internship application management while emphasizing reusability, extensibility, and maintainability.
+---
+
+## Overview
+
+The system is a Java console application developed for the SC2002 Object-Oriented Design & Programming course at Nanyang Technological University.  
+It acts as a centralized hub for Students, Company Representatives, and Career Center Staff, streamlining internship application management while emphasizing reusability, extensibility, and maintainability.
+
+---
 
 ## Team Members
 
-<table> <tr> <td align="center"><sub><b>Aasish Mamidi</b></sub></td> <td align="center"><sub><b>Aloysius Chia Chu-Yang</b></sub></td> <td align="center"><sub><b>Arya Rajesh Kudlur</b></sub></td> <td align="center"><sub><b>Chong Xin Le</b></sub></td> <td align="center"><sub><b>Muhammad Izzat Bin Ramlee</b></sub></td> </tr> </table>
-
+| Aasish Mamidi | Aloysius Chia Chu-Yang | Arya Rajesh Kudlur | Chong Xin Le | Muhammad Izzat Bin Ramlee |
+|---------------|-----------------------|------------------|--------------|---------------------------|
