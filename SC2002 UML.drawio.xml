@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15" version="28.2.8">
+  <diagram id="InternshipPlacementSystem" name="Class Diagram">
+    <mxGraphModel dx="2690" dy="1128" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- User Class -->
+        <mxCell id="User" value="User" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="680" y="40" width="240" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="User-attributes" value="- userId: String&#xa;- password: String&#xa;- name: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="User" vertex="1">
+          <mxGeometry y="26" width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="User-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="User" vertex="1">
+          <mxGeometry y="86" width="240" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="User-methods" value="+ User(userId, password, name)&#xa;+ getUserId(): String&#xa;+ getPassword(): String&#xa;+ setPassword(password: String): void&#xa;+ getName(): String&#xa;+ setName(name: String): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="User" vertex="1">
+          <mxGeometry y="94" width="240" height="106" as="geometry" />
+        </mxCell>
+        
+        <!-- Student Class -->
+        <mxCell id="Student" value="Student" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="240" y="320" width="280" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Student-attributes" value="- year: int&#xa;- major: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Student" vertex="1">
+          <mxGeometry y="26" width="280" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="Student-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="Student" vertex="1">
+          <mxGeometry y="70" width="280" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Student-methods" value="+ Student(...)&#xa;+ getYear(): int&#xa;+ setYear(year: int): void&#xa;+ getMajor(): String&#xa;+ setMajor(major: String): void&#xa;+ canApplyForLevel(level: String): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Student" vertex="1">
+          <mxGeometry y="78" width="280" height="102" as="geometry" />
+        </mxCell>
+        
+        <!-- CompanyRep Class -->
+        <mxCell id="CompanyRep" value="CompanyRep" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="600" y="320" width="280" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="CompanyRep-attributes" value="- companyName: String&#xa;- department: String&#xa;- position: String&#xa;- approved: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="CompanyRep" vertex="1">
+          <mxGeometry y="26" width="280" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="CompanyRep-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="CompanyRep" vertex="1">
+          <mxGeometry y="100" width="280" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="CompanyRep-methods" value="+ CompanyRep(...)&#xa;+ getCompanyName(): String&#xa;+ setCompanyName(name: String): void&#xa;+ getDepartment(): String&#xa;+ setDepartment(dept: String): void&#xa;+ getPosition(): String&#xa;+ setPosition(pos: String): void&#xa;+ isApproved(): boolean&#xa;+ setApproved(approved: boolean): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="CompanyRep" vertex="1">
+          <mxGeometry y="108" width="280" height="112" as="geometry" />
+        </mxCell>
+        
+        <!-- Staff Class -->
+        <mxCell id="Staff" value="Staff" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="960" y="320" width="260" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Staff-attributes" value="- department: String&#xa;- email: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Staff" vertex="1">
+          <mxGeometry y="26" width="260" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="Staff-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="Staff" vertex="1">
+          <mxGeometry y="70" width="260" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Staff-methods" value="+ Staff(...)&#xa;+ getDepartment(): String&#xa;+ setDepartment(dept: String): void&#xa;+ getEmail(): String&#xa;+ setEmail(email: String): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Staff" vertex="1">
+          <mxGeometry y="78" width="260" height="102" as="geometry" />
+        </mxCell>
+        
+        <!-- Internship Class -->
+        <mxCell id="Internship" value="Internship" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="40" y="620" width="320" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="Internship-attributes" value="- id: int&#xa;- title: String&#xa;- description: String&#xa;- level: String&#xa;- preferredMajor: String&#xa;- openingDate: String&#xa;- closingDate: String&#xa;- status: String&#xa;- companyName: String&#xa;- repId: String&#xa;- totalSlots: int&#xa;- availableSlots: int&#xa;- visible: boolean&#xa;{static} - idCounter: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Internship" vertex="1">
+          <mxGeometry y="26" width="320" height="224" as="geometry" />
+        </mxCell>
+        <mxCell id="Internship-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="Internship" vertex="1">
+          <mxGeometry y="250" width="320" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Internship-methods" value="+ Internship(...)&#xa;+ getId(): int&#xa;+ getTitle(): String&#xa;+ getDescription(): String&#xa;+ getLevel(): String&#xa;+ getPreferredMajor(): String&#xa;+ getOpeningDate(): String&#xa;+ getClosingDate(): String&#xa;+ getStatus(): String&#xa;+ setStatus(status: String): void&#xa;+ getCompanyName(): String&#xa;+ getRepId(): String&#xa;+ getTotalSlots(): int&#xa;+ getAvailableSlots(): int&#xa;+ decreaseAvailableSlots(): void&#xa;+ increaseAvailableSlots(): void&#xa;+ isVisible(): boolean&#xa;+ setVisible(visible: boolean): void&#xa;+ toggleVisibility(): void&#xa;+ isOpenForApplications(): boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Internship" vertex="1">
+          <mxGeometry y="258" width="320" height="162" as="geometry" />
+        </mxCell>
+        
+        <!-- Application Class -->
+        <mxCell id="Application" value="Application" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="440" y="620" width="340" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="Application-attributes" value="- id: int&#xa;- studentId: String&#xa;- internship: Internship&#xa;- status: String&#xa;- withdrawalReason: String&#xa;- withdrawalStatus: String&#xa;- placementAccepted: boolean&#xa;{static} - idCounter: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Application" vertex="1">
+          <mxGeometry y="26" width="340" height="134" as="geometry" />
+        </mxCell>
+        <mxCell id="Application-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="Application" vertex="1">
+          <mxGeometry y="160" width="340" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Application-methods" value="+ Application(studentId: String, internship: Internship)&#xa;+ getId(): int&#xa;+ getStudentId(): String&#xa;+ getInternship(): Internship&#xa;+ getStatus(): String&#xa;+ setStatus(status: String): void&#xa;+ getWithdrawalReason(): String&#xa;+ setWithdrawalReason(reason: String): void&#xa;+ getWithdrawalStatus(): String&#xa;+ setWithdrawalStatus(status: String): void&#xa;+ isPlacementAccepted(): boolean&#xa;+ setPlacementAccepted(accepted: boolean): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="Application" vertex="1">
+          <mxGeometry y="168" width="340" height="212" as="geometry" />
+        </mxCell>
+        
+        <!-- UserManager Class -->
+        <mxCell id="UserManager" value="UserManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="880" y="620" width="340" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="UserManager-attributes" value="- users: List&lt;User&gt;&#xa;- pendingCompanyReps: List&lt;CompanyRep&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="UserManager" vertex="1">
+          <mxGeometry y="26" width="340" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="UserManager-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="UserManager" vertex="1">
+          <mxGeometry y="70" width="340" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="UserManager-methods" value="+ UserManager()&#xa;+ addUser(user: User): void&#xa;+ addPendingCompanyRep(rep: CompanyRep): void&#xa;+ login(userId: String, password: String): User&#xa;+ getUserById(userId: String): User&#xa;+ getPendingCompanyReps(): List&lt;CompanyRep&gt;&#xa;+ approveCompanyRep(rep: CompanyRep): void&#xa;+ rejectCompanyRep(rep: CompanyRep): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="UserManager" vertex="1">
+          <mxGeometry y="78" width="340" height="162" as="geometry" />
+        </mxCell>
+        
+        <!-- InternshipManager Class -->
+        <mxCell id="InternshipManager" value="InternshipManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="40" y="1120" width="460" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="InternshipManager-attributes" value="- internships: List&lt;Internship&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="InternshipManager" vertex="1">
+          <mxGeometry y="26" width="460" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="InternshipManager-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="InternshipManager" vertex="1">
+          <mxGeometry y="52" width="460" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="InternshipManager-methods" value="+ InternshipManager()&#xa;+ addInternship(internship: Internship): void&#xa;+ getAllInternships(): List&lt;Internship&gt;&#xa;+ getInternshipsForStudent(student: Student): List&lt;Internship&gt;&#xa;+ getInternshipsForCompany(repId: String): List&lt;Internship&gt;&#xa;+ getInternshipCountForCompany(repId: String): int&#xa;+ getPendingInternships(): List&lt;Internship&gt;&#xa;+ generateReport(status: String, major: String, level: String): List&lt;Internship&gt;&#xa;+ getInternshipById(id: int): Internship" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="InternshipManager" vertex="1">
+          <mxGeometry y="60" width="460" height="220" as="geometry" />
+        </mxCell>
+        
+        <!-- ApplicationManager Class -->
+        <mxCell id="ApplicationManager" value="ApplicationManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="560" y="1120" width="520" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ApplicationManager-attributes" value="- applications: List&lt;Application&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="ApplicationManager" vertex="1">
+          <mxGeometry y="26" width="520" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ApplicationManager-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="ApplicationManager" vertex="1">
+          <mxGeometry y="52" width="520" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="ApplicationManager-methods" value="+ ApplicationManager()&#xa;+ applyForInternship(student: Student, internship: Internship): boolean&#xa;+ hasAppliedToInternship(studentId: String, internshipId: int): boolean&#xa;+ getApplicationCount(studentId: String): int&#xa;+ getApplicationsForStudent(studentId: String): List&lt;Application&gt;&#xa;+ getSuccessfulApplications(studentId: String): List&lt;Application&gt;&#xa;+ getApplicationsForInternship(internshipId: int): List&lt;Application&gt;&#xa;+ updateApplicationStatus(app: Application, status: String): void&#xa;+ acceptPlacement(studentId: String, app: Application): void&#xa;+ requestWithdrawal(studentId: String, applicationId: int, reason: String): boolean&#xa;+ getWithdrawableApplications(studentId: String): List&lt;Application&gt;&#xa;+ getPendingWithdrawals(): List&lt;Application&gt;&#xa;+ approveWithdrawal(application: Application): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="ApplicationManager" vertex="1">
+          <mxGeometry y="60" width="520" height="260" as="geometry" />
+        </mxCell>
+        
+        <!-- Inheritance relationships -->
+        <mxCell id="Student-User" value="" style="endArrow=block;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.2;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="Student" target="User-methods" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="380" y="300" as="sourcePoint" />
+            <mxPoint x="540" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="CompanyRep-User" value="" style="endArrow=block;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="CompanyRep" target="User-methods" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="740" y="300" as="sourcePoint" />
+            <mxPoint x="800" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="Staff-User" value="" style="endArrow=block;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.8;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="Staff" target="User-methods" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="1090" y="300" as="sourcePoint" />
+            <mxPoint x="872" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Association: Application -> Internship -->
+        <mxCell id="Application-Internship" value="" style="endArrow=none;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="Application" target="Internship" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="700" as="sourcePoint" />
+            <mxPoint x="360" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Application-Internship-mult1" value="*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Application-Internship" vertex="1" connectable="0">
+          <mxGeometry x="-0.8" y="-1" relative="1" as="geometry">
+            <mxPoint x="-5" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Application-Internship-mult2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Application-Internship" vertex="1" connectable="0">
+          <mxGeometry x="0.7" y="-1" relative="1" as="geometry">
+            <mxPoint x="5" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Association: UserManager manages Users -->
+        <mxCell id="UserManager-User" value="" style="endArrow=open;html=1;dashed=1;dashPattern=1 2;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="UserManager" target="Staff" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1050" y="570" as="sourcePoint" />
+            <mxPoint x="1100" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UserManager-User-label" value="«manages»" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="UserManager-User" vertex="1" connectable="0">
+          <mxGeometry x="0.1" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Association: InternshipManager manages Internships -->
+        <mxCell id="InternshipManager-Internship" value="" style="endArrow=open;html=1;dashed=1;dashPattern=1 2;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="InternshipManager" target="Internship" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="155" y="1100" as="sourcePoint" />
+            <mxPoint x="155" y="1050" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="InternshipManager-Internship-label" value="«manages»" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="InternshipManager-Internship" vertex="1" connectable="0">
+          <mxGeometry x="0.1" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Association: ApplicationManager manages Applications -->
+        <mxCell id="ApplicationManager-Application" value="" style="endArrow=open;html=1;dashed=1;dashPattern=1 2;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="ApplicationManager" target="Application" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="675" y="1100" as="sourcePoint" />
+            <mxPoint x="695" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ApplicationManager-Application-label" value="«manages»" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="ApplicationManager-Application" vertex="1" connectable="0">
+          <mxGeometry x="0.1" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

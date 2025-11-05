@@ -105,16 +105,41 @@ public class ApplicationManager {
         }
     }
 
-    public boolean requestWithdrawal(String studentId, String reason) {
+    public boolean requestWithdrawal(String studentId, int applicationId, String reason) {
         for (Application app : applications) {
-            if (app.getStudentId().equals(studentId) &&
+            if (app.getStudentId().equals(studentId) && app.getId() == applicationId) {
+                // Can only withdraw if application is Pending, Successful, or placement is accepted
+                if (app.getStatus().equals("Pending") ||
+                    app.getStatus().equals("Successful") ||
                     app.isPlacementAccepted()) {
-                app.setWithdrawalReason(reason);
-                app.setWithdrawalStatus("Pending");
-                return true;
+
+                    app.setWithdrawalReason(reason);
+                    app.setWithdrawalStatus("Pending");
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    public List<Application> getWithdrawableApplications(String studentId) {
+        List<Application> result = new ArrayList<>();
+
+        for (Application app : applications) {
+            if (app.getStudentId().equals(studentId)) {
+                // Can withdraw Pending, Successful, or accepted placements
+                // Cannot withdraw Unsuccessful or already Withdrawn applications
+                if ((app.getStatus().equals("Pending") ||
+                     app.getStatus().equals("Successful") ||
+                     app.isPlacementAccepted()) &&
+                    (app.getWithdrawalStatus() == null ||
+                     !app.getWithdrawalStatus().equals("Pending"))) {
+                    result.add(app);
+                }
+            }
+        }
+
+        return result;
     }
 
     public List<Application> getPendingWithdrawals() {
@@ -132,8 +157,14 @@ public class ApplicationManager {
 
     public void approveWithdrawal(Application application) {
         application.setWithdrawalStatus("Approved");
-        application.setPlacementAccepted(false);
+
+        // Only increase slots if the placement was actually accepted
+        // Pending/Successful applications that were never accepted don't need slot adjustment
+        if (application.isPlacementAccepted()) {
+            application.setPlacementAccepted(false);
+            application.getInternship().increaseAvailableSlots();
+        }
+
         application.setStatus("Withdrawn");
-        application.getInternship().increaseAvailableSlots();
     }
 }

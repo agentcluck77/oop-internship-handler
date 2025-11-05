@@ -14,7 +14,11 @@ public class Main {
     private static final String STUDENT_CSV_PATH = "students.csv";
     private static final String STAFF_CSV_PATH = "staff.csv";
 
-    // Filter settings
+    // Business rule constants 
+    private static final int MAX_APPLICATIONS_PER_STUDENT = 3;
+    private static final int MAX_INTERNSHIPS_PER_COMPANY = 5;
+    private static final int MAX_SLOTS_PER_INTERNSHIP = 10;
+
     private static String filterStatus = null;
     private static String filterMajor = null;
     private static String filterLevel = null;
@@ -66,6 +70,13 @@ public class Main {
                 String[] parts = line.split(",");
                 if (parts.length == 5) {
                     String id = parts[0].trim();
+
+                    // Validate student ID format
+                    if (!isValidStudentId(id)) {
+                        System.out.println("Warning: Invalid student ID format '" + id + "' - skipping entry. Expected format: U#######L");
+                        continue;
+                    }
+
                     String password = parts[1].trim();
                     String name = parts[2].trim();
                     String major = parts[3].trim();
@@ -143,24 +154,50 @@ public class Main {
 
     private static void registerCompanyRep() {
         System.out.print("Enter Email: ");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim();
 
-        // Validate email format
-        if (!email.contains("@")) {
-            System.out.println("Invalid email format!");
+        // FIX: Improved email validation with regex pattern
+        if (!isValidEmail(email)) {
+            System.out.println("Invalid email format! Must contain @ and a domain.");
             return;
         }
 
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
+        
+        // minimum password length requirement
+        if (password.length() < 6) {
+            System.out.println("Password must be at least 6 characters!");
+            return;
+        }
+        
         System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
+        String name = scanner.nextLine().trim();
+        if (name.isEmpty() || name.length() > 100) {
+            System.out.println("Name must be between 1 and 100 characters!");
+            return;
+        }
+        
         System.out.print("Enter Company Name: ");
-        String company = scanner.nextLine();
+        String company = scanner.nextLine().trim();
+        if (company.isEmpty() || company.length() > 100) {
+            System.out.println("Company name must be between 1 and 100 characters!");
+            return;
+        }
+        
         System.out.print("Enter Department: ");
-        String department = scanner.nextLine();
+        String department = scanner.nextLine().trim();
+        if (department.isEmpty() || department.length() > 100) {
+            System.out.println("Department must be between 1 and 100 characters!");
+            return;
+        }
+        
         System.out.print("Enter Position: ");
-        String position = scanner.nextLine();
+        String position = scanner.nextLine().trim();
+        if (position.isEmpty() || position.length() > 100) {
+            System.out.println("Position must be between 1 and 100 characters!");
+            return;
+        }
 
         CompanyRep rep = new CompanyRep(email, password, name, company, department, position);
         userManager.addPendingCompanyRep(rep);
@@ -213,6 +250,7 @@ public class Main {
                     }
                     break;
                 case 9:
+                    clearFilters(); // Clear filters on logout
                     return;
                 default:
                     System.out.println("Invalid option!");
@@ -265,6 +303,7 @@ public class Main {
                     }
                     break;
                 case 9:
+                    clearFilters(); // Clear filters on logout 
                     return;
                 default:
                     System.out.println("Invalid option!");
@@ -317,6 +356,7 @@ public class Main {
                     }
                     break;
                 case 9:
+                    clearFilters(); // Clear filters on logout
                     return;
                 default:
                     System.out.println("Invalid option!");
@@ -416,8 +456,8 @@ public class Main {
     }
 
     private static void applyForInternship(Student student) {
-        if (applicationManager.getApplicationCount(student.getUserId()) >= 3) {
-            System.out.println("You already have 3 pending applications!");
+        if (applicationManager.getApplicationCount(student.getUserId()) >= MAX_APPLICATIONS_PER_STUDENT) {
+            System.out.println("You already have " + MAX_APPLICATIONS_PER_STUDENT + " pending applications!");
             return;
         }
 
@@ -460,12 +500,24 @@ public class Main {
             return;
         }
 
+        // Students can view all internships they've applied to, even if visibility is turned off
         System.out.println("\n=== My Applications ===");
         for (int i = 0; i < applications.size(); i++) {
             Application app = applications.get(i);
-            System.out.println((i + 1) + ". " + app.getInternship().getTitle());
-            System.out.println("   Status: " + app.getStatus());
-            System.out.println("   Company: " + app.getInternship().getCompanyName());
+            Internship internship = app.getInternship();
+
+            System.out.println((i + 1) + ". " + internship.getTitle());
+            System.out.println("   Company: " + internship.getCompanyName());
+            System.out.println("   Level: " + internship.getLevel());
+            System.out.println("   Major: " + internship.getPreferredMajor());
+            System.out.println("   Closing Date: " + internship.getClosingDate());
+            System.out.println("   Application Status: " + app.getStatus());
+
+            // Show visibility status - students can see this even when visibility is off
+            if (!internship.isVisible()) {
+                System.out.println("   [Currently hidden from public listing]");
+            }
+
             if (app.isPlacementAccepted()) {
                 System.out.println("   Placement: ACCEPTED");
             }
@@ -503,27 +555,63 @@ public class Main {
     }
 
     private static void requestWithdrawal(Student student) {
-        System.out.print("Enter reason for withdrawal: ");
-        String reason = scanner.nextLine();
+        List<Application> withdrawable = applicationManager.getWithdrawableApplications(student.getUserId());
 
-        if (applicationManager.requestWithdrawal(student.getUserId(), reason)) {
-            System.out.println("Withdrawal request submitted.");
+        if (withdrawable.isEmpty()) {
+            System.out.println("No applications available for withdrawal.");
+            return;
+        }
+
+        System.out.println("\n=== Applications Available for Withdrawal ===");
+        for (int i = 0; i < withdrawable.size(); i++) {
+            Application app = withdrawable.get(i);
+            System.out.println((i + 1) + ". " + app.getInternship().getTitle());
+            System.out.println("   Company: " + app.getInternship().getCompanyName());
+            System.out.println("   Status: " + app.getStatus());
+            if (app.isPlacementAccepted()) {
+                System.out.println("   Placement: ACCEPTED");
+            }
+        }
+
+        System.out.print("\nEnter application number to withdraw: ");
+        int choice = getIntInput() - 1;
+
+        if (choice >= 0 && choice < withdrawable.size()) {
+            System.out.print("Enter reason for withdrawal: ");
+            String reason = scanner.nextLine();
+
+            Application app = withdrawable.get(choice);
+            if (applicationManager.requestWithdrawal(student.getUserId(), app.getId(), reason)) {
+                System.out.println("Withdrawal request submitted for approval.");
+            } else {
+                System.out.println("Failed to submit withdrawal request.");
+            }
         } else {
-            System.out.println("No active placement to withdraw from.");
+            System.out.println("Invalid choice!");
         }
     }
 
     // Company Rep functions
     private static void createInternship(CompanyRep rep) {
-        if (internshipManager.getInternshipCountForCompany(rep.getUserId()) >= 5) {
-            System.out.println("You already have 5 internships!");
+        if (internshipManager.getInternshipCountForCompany(rep.getUserId()) >= MAX_INTERNSHIPS_PER_COMPANY) {
+            System.out.println("You already have " + MAX_INTERNSHIPS_PER_COMPANY + " internships!");
             return;
         }
 
         System.out.print("Enter Title: ");
-        String title = scanner.nextLine();
+        String title = scanner.nextLine().trim();
+        // input length limits to prevent display issues
+        if (title.isEmpty() || title.length() > 200) {
+            System.out.println("Title must be between 1 and 200 characters!");
+            return;
+        }
+        
         System.out.print("Enter Description: ");
-        String description = scanner.nextLine();
+        String description = scanner.nextLine().trim();
+        if (description.isEmpty() || description.length() > 1000) {
+            System.out.println("Description must be between 1 and 1000 characters!");
+            return;
+        }
 
         String level;
         while (true) {
@@ -538,8 +626,17 @@ public class Main {
             }
         }
 
-        System.out.print("Enter Preferred Major (CSC/EEE/MAE): ");
-        String major = scanner.nextLine();
+        // validate major input 
+        String major;
+        while (true) {
+            System.out.print("Enter Preferred Major (CSC/EEE/MAE): ");
+            major = scanner.nextLine().trim().toUpperCase();
+            if (major.equals("CSC") || major.equals("EEE") || major.equals("MAE")) {
+                break;
+            } else {
+                System.out.println("Invalid major! Please enter CSC, EEE, or MAE.");
+            }
+        }
 
         String openDate;
         String closeDate;
@@ -558,12 +655,12 @@ public class Main {
 
         int slots;
         while (true) {
-            System.out.print("Enter Number of Slots (max 10): ");
+            System.out.print("Enter Number of Slots (max " + MAX_SLOTS_PER_INTERNSHIP + "): ");
             slots = getIntInput();
-            if (slots > 0 && slots <= 10) {
+            if (slots > 0 && slots <= MAX_SLOTS_PER_INTERNSHIP) {
                 break;
             } else {
-                System.out.println("Slots must be between 1 and 10!");
+                System.out.println("Slots must be between 1 and " + MAX_SLOTS_PER_INTERNSHIP + "!");
             }
         }
 
@@ -607,17 +704,26 @@ public class Main {
 
     private static void viewApplicationsForInternship(CompanyRep rep) {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
+        // apply filters once before displaying to avoid index mismatch
+        List<Internship> filteredInternships = applyFilters(internships);
 
-        if (internships.isEmpty()) {
+        if (filteredInternships.isEmpty()) {
             System.out.println("No internships found.");
             return;
         }
 
-        viewMyInternships(rep);
+        // display filtered list
+        System.out.println("\n=== My Internships ===");
+        displayActiveFilters();
+        for (int i = 0; i < filteredInternships.size(); i++) {
+            Internship internship = filteredInternships.get(i);
+            System.out.println((i + 1) + ". " + internship.getTitle());
+            System.out.println("   Status: " + internship.getStatus());
+        }
+
         System.out.print("\nEnter internship number: ");
         int choice = getIntInput() - 1;
 
-        List<Internship> filteredInternships = applyFilters(internships);
         if (choice >= 0 && choice < filteredInternships.size()) {
             Internship internship = filteredInternships.get(choice);
             List<Application> applications = applicationManager.getApplicationsForInternship(internship.getId());
@@ -630,27 +736,42 @@ public class Main {
             System.out.println("\n=== Applications ===");
             for (int i = 0; i < applications.size(); i++) {
                 Application app = applications.get(i);
+                // add null check to prevent crash if student was deleted
                 Student student = (Student) userManager.getUserById(app.getStudentId());
-                System.out.println((i + 1) + ". " + student.getName());
-                System.out.println("   Year: " + student.getYear() + ", Major: " + student.getMajor());
-                System.out.println("   Status: " + app.getStatus());
+                if (student == null) {
+                    System.out.println((i + 1) + ". [Unknown Student - ID: " + app.getStudentId() + "]");
+                    System.out.println("   Status: " + app.getStatus());
+                } else {
+                    System.out.println((i + 1) + ". " + student.getName());
+                    System.out.println("   Year: " + student.getYear() + ", Major: " + student.getMajor());
+                    System.out.println("   Status: " + app.getStatus());
+                }
             }
         }
     }
 
     private static void approveRejectApplication(CompanyRep rep) {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
+        // apply filters once before displaying to avoid index mismatch
+        List<Internship> filteredInternships = applyFilters(internships);
 
-        if (internships.isEmpty()) {
+        if (filteredInternships.isEmpty()) {
             System.out.println("No internships found.");
             return;
         }
 
-        viewMyInternships(rep);
+        // Display the filtered list
+        System.out.println("\n=== My Internships ===");
+        displayActiveFilters();
+        for (int i = 0; i < filteredInternships.size(); i++) {
+            Internship internship = filteredInternships.get(i);
+            System.out.println((i + 1) + ". " + internship.getTitle());
+            System.out.println("   Status: " + internship.getStatus());
+        }
+
         System.out.print("\nEnter internship number: ");
         int internChoice = getIntInput() - 1;
 
-        List<Internship> filteredInternships = applyFilters(internships);
         if (internChoice >= 0 && internChoice < filteredInternships.size()) {
             Internship internship = filteredInternships.get(internChoice);
             List<Application> applications = applicationManager.getApplicationsForInternship(internship.getId());
@@ -670,8 +791,13 @@ public class Main {
             System.out.println("\n=== Pending Applications ===");
             for (int i = 0; i < pending.size(); i++) {
                 Application app = pending.get(i);
+                // FIX: Add null check to prevent crash if student was deleted
                 Student student = (Student) userManager.getUserById(app.getStudentId());
-                System.out.println((i + 1) + ". " + student.getName());
+                if (student == null) {
+                    System.out.println((i + 1) + ". [Unknown Student - ID: " + app.getStudentId() + "]");
+                } else {
+                    System.out.println((i + 1) + ". " + student.getName());
+                }
             }
 
             System.out.print("\nEnter application number: ");
@@ -694,21 +820,33 @@ public class Main {
 
     private static void toggleVisibility(CompanyRep rep) {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
+        // FIX: Apply filters ONCE before displaying to avoid index mismatch
+        List<Internship> filteredInternships = applyFilters(internships);
 
-        if (internships.isEmpty()) {
+        if (filteredInternships.isEmpty()) {
             System.out.println("No internships found.");
             return;
         }
 
-        viewMyInternships(rep);
+        // Display the filtered list
+        System.out.println("\n=== My Internships ===");
+        displayActiveFilters();
+        for (int i = 0; i < filteredInternships.size(); i++) {
+            Internship internship = filteredInternships.get(i);
+            System.out.println((i + 1) + ". " + internship.getTitle());
+            System.out.println("   Status: " + internship.getStatus());
+            System.out.println("   Visible: " + (internship.isVisible() ? "Yes" : "No"));
+        }
+
         System.out.print("\nEnter internship number to toggle visibility: ");
         int choice = getIntInput() - 1;
 
-        List<Internship> filteredInternships = applyFilters(internships);
         if (choice >= 0 && choice < filteredInternships.size()) {
             Internship internship = filteredInternships.get(choice);
             internship.toggleVisibility();
             System.out.println("Visibility toggled to: " + (internship.isVisible() ? "On" : "Off"));
+        } else {
+            System.out.println("Invalid choice!");
         }
     }
 
@@ -792,8 +930,13 @@ public class Main {
         System.out.println("\n=== Pending Withdrawals ===");
         for (int i = 0; i < withdrawals.size(); i++) {
             Application app = withdrawals.get(i);
+            // FIX: Add null check to prevent crash if student was deleted
             Student student = (Student) userManager.getUserById(app.getStudentId());
-            System.out.println((i + 1) + ". " + student.getName());
+            if (student == null) {
+                System.out.println((i + 1) + ". [Unknown Student - ID: " + app.getStudentId() + "]");
+            } else {
+                System.out.println((i + 1) + ". " + student.getName());
+            }
             System.out.println("   Internship: " + app.getInternship().getTitle());
             System.out.println("   Reason: " + app.getWithdrawalReason());
         }
@@ -886,5 +1029,39 @@ public class Main {
                 System.out.print("Please enter a valid number: ");
             }
         }
+    }
+
+    // helper method for better email validation
+    private static boolean isValidEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        // must contain @ and have text before and after it
+        int atIndex = email.indexOf('@');
+        if (atIndex <= 0 || atIndex == email.length() - 1) {
+            return false;
+        }
+        // Must have a dot after @
+        int lastDot = email.lastIndexOf('.');
+        return lastDot > atIndex && lastDot < email.length() - 1;
+    }
+
+    // Validate student ID format: U + 7 digits + letter (e.g., U2345123F)
+    private static boolean isValidStudentId(String studentId) {
+        if (studentId == null || studentId.length() != 9) {
+            return false;
+        }
+        // Must start with 'U'
+        if (studentId.charAt(0) != 'U') {
+            return false;
+        }
+        // Next 7 characters must be digits
+        for (int i = 1; i <= 7; i++) {
+            if (!Character.isDigit(studentId.charAt(i))) {
+                return false;
+            }
+        }
+        // Last character must be a letter
+        return Character.isLetter(studentId.charAt(8));
     }
 }
