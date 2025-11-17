@@ -1,8 +1,7 @@
 import java.util.Arrays;
 
 /**
- * Menu handler for staff interface.
- * Extracted from Main.java lines 314-365 to separate UI from business logic.
+ * Menu handler for staff interactions.
  */
 public class StaffMenuHandler implements MenuHandler {
     private ConsoleUI ui;
@@ -29,8 +28,7 @@ public class StaffMenuHandler implements MenuHandler {
     }
 
     /**
-     * Handle menu choice
-     * Extracted from Main.java lines 328-364
+     * Handle menu choice.
      * @return true to continue, false to logout
      */
     @Override

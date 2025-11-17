@@ -20,14 +20,13 @@ public class UserManager implements IUserManager {
     public User login(String userId, String password) {
         for (User user : users) {
             if (user.getUserId().equals(userId) && user.getPassword().equals(password)) {
-                if (user instanceof CompanyRep) {
-                    CompanyRep rep = (CompanyRep) user;
-                    if (!rep.isApproved()) {
-                        System.out.println("Your account is pending approval.");
-                        return null;
-                    }
-                }
                 return user;
+            }
+        }
+
+        for (CompanyRep rep : pendingCompanyReps) {
+            if (rep.getUserId().equals(userId) && rep.getPassword().equals(password)) {
+                return rep;
             }
         }
         return null;

@@ -1,2 +1,10 @@
 bin/
 docs/
+.DS_Store
+/out/
+/out-test/
+/out/production/
+/scenarios/
+/scripts/run_full_flow.sh
+/scripts/run_withdrawal_flow.sh
+/scripts/run_filter_flow.sh

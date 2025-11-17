@@ -6,18 +6,15 @@ public class StaffMenuHandlerFactory implements MenuHandlerFactory {
     private IUserManager userManager;
     private IInternshipManager internshipManager;
     private IApplicationManager applicationManager;
-    private IFilterService filterService;
     private ConsoleUI ui;
 
     public StaffMenuHandlerFactory(IUserManager userManager,
                                   IInternshipManager internshipManager,
                                   IApplicationManager applicationManager,
-                                  IFilterService filterService,
                                   ConsoleUI ui) {
         this.userManager = userManager;
         this.internshipManager = internshipManager;
         this.applicationManager = applicationManager;
-        this.filterService = filterService;
         this.ui = ui;
     }
 
@@ -29,6 +26,7 @@ public class StaffMenuHandlerFactory implements MenuHandlerFactory {
     @Override
     public MenuHandler create(User user) {
         Staff staff = (Staff) user;
+        IFilterService filterService = new FilterService();
         StaffController controller = new StaffController(
             staff,
             userManager,

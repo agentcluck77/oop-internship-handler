@@ -1,9 +1,7 @@
 import java.util.Arrays;
 
 /**
- * Main application controller that manages the overall application flow.
- * Extracted from Main.java lines 27-55 to follow Single Responsibility Principle.
- * NOW FOLLOWS OPEN/CLOSED PRINCIPLE using factory registry pattern.
+ * Coordinates application startup, authentication, and menu routing.
  */
 public class ApplicationController {
     private ConsoleUI ui;
@@ -19,8 +17,7 @@ public class ApplicationController {
     }
 
     /**
-     * Run the main application loop
-     * Extracted from Main.java lines 27-54
+     * Display the main menu and respond to user actions.
      */
     public void run() {
         ui.displayMessage("=== Internship Placement Management System ===\n");

@@ -17,4 +17,5 @@ public interface IApplicationManager {
     List<Application> getWithdrawableApplications(String studentId);
     List<Application> getPendingWithdrawals();
     void approveWithdrawal(Application application);
+    void removeApplicationsForInternship(int internshipId);
 }

@@ -3,7 +3,6 @@ import java.util.List;
 
 /**
  * Encapsulates filter criteria for internships.
- * Extracted from Main.java to follow Single Responsibility Principle.
  */
 public class Filter {
     private String status;
@@ -70,8 +69,7 @@ public class Filter {
     }
 
     /**
-     * Apply filters to a list of internships
-     * Extracted from Main.java lines 397-422
+     * Apply filters to a list of internships.
      */
     public List<Internship> apply(List<Internship> internships) {
         List<Internship> filtered = new ArrayList<>();
@@ -101,8 +99,7 @@ public class Filter {
     }
 
     /**
-     * Get display string for active filters
-     * Extracted from Main.java lines 447-456
+     * Get display string for active filters.
      */
     public String getDisplayString() {
         if (!hasActiveFilters()) {

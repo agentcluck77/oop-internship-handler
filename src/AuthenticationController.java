@@ -1,7 +1,5 @@
 /**
- * Controller for authentication operations (login and registration).
- * Extracted from Main.java lines 131-206 to follow Single Responsibility Principle.
- * NOW FOLLOWS DEPENDENCY INVERSION PRINCIPLE using interfaces.
+ * Handles user login and company representative registration.
  */
 public class AuthenticationController {
     private IUserManager userManager;
@@ -17,8 +15,7 @@ public class AuthenticationController {
     }
 
     /**
-     * Handle user login
-     * Extracted from Main.java lines 131-153
+     * Authenticate a user and return the corresponding domain object.
      * @return authenticated User or null if login failed
      */
     public User login() {
@@ -32,13 +29,20 @@ public class AuthenticationController {
             return null;
         }
 
+        if (user instanceof CompanyRep) {
+            CompanyRep rep = (CompanyRep) user;
+            if (!rep.isApproved()) {
+                ui.displayMessage("Your registration is awaiting staff approval.");
+                return null;
+            }
+        }
+
         ui.displayMessage("Login successful! Welcome, " + user.getName());
         return user;
     }
 
     /**
-     * Register a new company representative
-     * Extracted from Main.java lines 155-206
+     * Register a new company representative account.
      */
     public void registerCompanyRep() {
         String email = ui.getInput("Enter Email: ").trim();

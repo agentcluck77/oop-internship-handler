@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 /**
  * Console-based implementation of the ConsoleUI interface.
- * Extracted from Main.java to separate UI concerns from business logic.
  */
 public class ConsoleUIImpl implements ConsoleUI {
     private Scanner scanner;
@@ -29,8 +28,7 @@ public class ConsoleUIImpl implements ConsoleUI {
     }
 
     /**
-     * Get integer input with validation
-     * Extracted from Main.java lines 1023-1032
+     * Get integer input with validation and retry prompts.
      */
     @Override
     public int getIntInput(String prompt) {
@@ -54,8 +52,7 @@ public class ConsoleUIImpl implements ConsoleUI {
     }
 
     /**
-     * Display internship details
-     * Extracted from Main.java lines 438-444
+     * Display basic internship information for selection lists.
      */
     @Override
     public void displayInternship(Internship internship, int index) {

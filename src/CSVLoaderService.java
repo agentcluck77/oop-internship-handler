@@ -3,22 +3,23 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 /**
- * Service for loading user data from CSV files.
- * Extracted from Main.java lines 57-129 to follow Single Responsibility Principle.
- * NOW FOLLOWS DEPENDENCY INVERSION PRINCIPLE using interfaces.
+ * Loads user data from CSV files into the application.
  */
 public class CSVLoaderService {
     private IUserManager userManager;
     private IValidationService validationService;
+    private ConsoleUI ui;
 
-    public CSVLoaderService(IUserManager userManager, IValidationService validationService) {
+    public CSVLoaderService(IUserManager userManager,
+                            IValidationService validationService,
+                            ConsoleUI ui) {
         this.userManager = userManager;
         this.validationService = validationService;
+        this.ui = ui;
     }
 
     /**
-     * Load students from CSV file
-     * Extracted from Main.java lines 58-95
+     * Load students from a CSV file.
      */
     public void loadStudents(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -38,7 +39,7 @@ public class CSVLoaderService {
 
                     // Validate student ID format
                     if (!validationService.isValidStudentId(id)) {
-                        System.out.println("Warning: Invalid student ID format '" + id +
+                        ui.displayError("Invalid student ID format '" + id +
                             "' - skipping entry. Expected format: U#######L");
                         continue;
                     }
@@ -53,17 +54,16 @@ public class CSVLoaderService {
                     studentCount++;
                 }
             }
-            System.out.println("Loaded " + studentCount + " students from " + filePath);
+            ui.displayMessage("Loaded " + studentCount + " students from " + filePath);
         } catch (FileNotFoundException e) {
-            System.out.println("Student CSV file not found: " + filePath);
+            ui.displayError("Student CSV file not found: " + filePath);
         } catch (Exception e) {
-            System.out.println("Error reading student file: " + e.getMessage());
+            ui.displayError("Error reading student file: " + e.getMessage());
         }
     }
 
     /**
-     * Load staff from CSV file
-     * Extracted from Main.java lines 98-128
+     * Load staff from a CSV file.
      */
     public void loadStaff(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -91,11 +91,11 @@ public class CSVLoaderService {
                     staffCount++;
                 }
             }
-            System.out.println("Loaded " + staffCount + " staff members from " + filePath);
+            ui.displayMessage("Loaded " + staffCount + " staff members from " + filePath);
         } catch (FileNotFoundException e) {
-            System.out.println("Staff CSV file not found: " + filePath);
+            ui.displayError("Staff CSV file not found: " + filePath);
         } catch (Exception e) {
-            System.out.println("Error reading staff file: " + e.getMessage());
+            ui.displayError("Error reading staff file: " + e.getMessage());
         }
     }
 }

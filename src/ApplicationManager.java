@@ -167,4 +167,8 @@ public class ApplicationManager implements IApplicationManager {
 
         application.setStatus("Withdrawn");
     }
+
+    public void removeApplicationsForInternship(int internshipId) {
+        applications.removeIf(app -> app.getInternship().getId() == internshipId);
+    }
 }

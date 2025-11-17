@@ -1,9 +1,7 @@
 import java.util.List;
 
 /**
- * Controller for student operations.
- * Extracted from Main.java lines 424-592 to follow Single Responsibility Principle.
- * NOW FOLLOWS DEPENDENCY INVERSION PRINCIPLE using interfaces.
+ * Handles student workflows such as browsing internships and managing applications.
  */
 public class StudentController {
     private Student student;
@@ -25,8 +23,7 @@ public class StudentController {
     }
 
     /**
-     * View available internships
-     * Extracted from Main.java lines 425-445
+     * Display internships available to the current student.
      */
     public void viewInternships() {
         List<Internship> internships = internshipManager.getInternshipsForStudent(student);
@@ -46,8 +43,7 @@ public class StudentController {
     }
 
     /**
-     * Apply for an internship
-     * Extracted from Main.java lines 458-493
+     * Apply for one of the currently visible internships.
      */
     public void applyForInternship() {
         if (applicationManager.getApplicationCount(student.getUserId()) >= BusinessRules.MAX_APPLICATIONS_PER_STUDENT) {
@@ -86,8 +82,7 @@ public class StudentController {
     }
 
     /**
-     * View student's own applications
-     * Extracted from Main.java lines 495-528
+     * Show all applications submitted by the student.
      */
     public void viewMyApplications() {
         List<Application> applications = applicationManager.getApplicationsForStudent(student.getUserId());
@@ -104,8 +99,7 @@ public class StudentController {
     }
 
     /**
-     * Accept a placement offer
-     * Extracted from Main.java lines 530-555
+     * Accept one of the student's successful placement offers.
      */
     public void acceptPlacement() {
         List<Application> successful = applicationManager.getSuccessfulApplications(student.getUserId());
@@ -134,8 +128,7 @@ public class StudentController {
     }
 
     /**
-     * Request withdrawal from an application
-     * Extracted from Main.java lines 557-592
+     * Request withdrawal from an application.
      */
     public void requestWithdrawal() {
         List<Application> withdrawable = applicationManager.getWithdrawableApplications(student.getUserId());
@@ -195,8 +188,7 @@ public class StudentController {
     }
 
     /**
-     * Change password
-     * Extracted from Main.java lines 999-1021
+     * Change the student's password.
      * @return true if password changed successfully (requires re-login)
      */
     public boolean changePassword() {

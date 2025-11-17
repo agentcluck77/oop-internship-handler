@@ -1,8 +1,7 @@
 import java.util.List;
 
 /**
- * Service for managing internship filters.
- * Extracted from Main.java lines 22-25, 368-422 to follow Single Responsibility Principle.
+ * Manages the filter criteria used to narrow internship listings.
  */
 public class FilterService implements IFilterService {
     private Filter currentFilter;
@@ -12,8 +11,7 @@ public class FilterService implements IFilterService {
     }
 
     /**
-     * Set filters based on user input
-     * Extracted from Main.java lines 368-387
+     * Set filters based on user input.
      */
     public void setFilters(String status, String major, String level, String closingDate) {
         currentFilter.setStatus(status);
@@ -23,8 +21,7 @@ public class FilterService implements IFilterService {
     }
 
     /**
-     * Clear all active filters
-     * Extracted from Main.java lines 389-395
+     * Clear all active filters.
      */
     public void clearFilters() {
         currentFilter.clear();

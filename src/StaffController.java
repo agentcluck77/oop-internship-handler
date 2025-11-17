@@ -1,9 +1,7 @@
 import java.util.List;
 
 /**
- * Controller for staff operations.
- * Extracted from Main.java lines 853-996 to follow Single Responsibility Principle.
- * NOW FOLLOWS DEPENDENCY INVERSION PRINCIPLE using interfaces.
+ * Coordinates staff capabilities such as approvals, reporting, and filters.
  */
 public class StaffController {
     private Staff staff;
@@ -28,8 +26,7 @@ public class StaffController {
     }
 
     /**
-     * Approve or reject company registration
-     * Extracted from Main.java lines 854-885
+     * Approve or reject company representative registrations.
      */
     public void approveRejectCompany() {
         List<CompanyRep> pending = userManager.getPendingCompanyReps();
@@ -63,8 +60,7 @@ public class StaffController {
     }
 
     /**
-     * Approve or reject internship
-     * Extracted from Main.java lines 887-920
+     * Approve or reject internship postings.
      */
     public void approveRejectInternship() {
         List<Internship> pending = internshipManager.getPendingInternships();
@@ -100,8 +96,7 @@ public class StaffController {
     }
 
     /**
-     * Approve or reject withdrawal request
-     * Extracted from Main.java lines 922-960
+     * Approve or reject withdrawal requests.
      */
     public void approveRejectWithdrawal() {
         List<Application> withdrawals = applicationManager.getPendingWithdrawals();
@@ -141,8 +136,7 @@ public class StaffController {
     }
 
     /**
-     * Generate report
-     * Extracted from Main.java lines 962-977
+     * Generate a filtered internship report.
      */
     public void generateReport() {
         ui.displayMessage("\n=== Generate Report (Using Current Filters) ===");
@@ -168,8 +162,7 @@ public class StaffController {
     }
 
     /**
-     * View all internships
-     * Extracted from Main.java lines 979-996
+     * View all internships in the system.
      */
     public void viewAllInternships() {
         List<Internship> all = internshipManager.getAllInternships();
@@ -214,7 +207,7 @@ public class StaffController {
     }
 
     /**
-     * Change password
+     * Change the staff member's password.
      * @return true if password changed successfully (requires re-login)
      */
     public boolean changePassword() {

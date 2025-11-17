@@ -3,14 +3,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Service for input validation logic.
- * Extracted from Main.java lines 674-683, 1034-1066 to follow Single Responsibility Principle.
+ * Provides validation helpers for user input.
  */
 public class ValidationService implements IValidationService {
 
     /**
-     * Validate email format
-     * Extracted from Main.java lines 1035-1047
+     * Validate email format.
      */
     public boolean isValidEmail(String email) {
         if (email == null || email.isEmpty()) {
@@ -27,8 +25,7 @@ public class ValidationService implements IValidationService {
     }
 
     /**
-     * Validate student ID format: U + 7 digits + letter (e.g., U2345123F)
-     * Extracted from Main.java lines 1050-1066
+     * Validate student ID format: U + 7 digits + letter (e.g., U2345123F).
      */
     public boolean isValidStudentId(String studentId) {
         if (studentId == null || studentId.length() != BusinessRules.STUDENT_ID_LENGTH) {
@@ -49,8 +46,7 @@ public class ValidationService implements IValidationService {
     }
 
     /**
-     * Validate closing date is after opening date
-     * Extracted from Main.java lines 674-683
+     * Validate closing date is after opening date.
      */
     public boolean isClosingDateValid(String openDate, String closeDate) {
         try {

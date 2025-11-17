@@ -1,6 +1,5 @@
 /**
- * Centralized business rule constants.
- * Extracted from Main.java lines 14-20 to follow Single Responsibility Principle.
+ * Centralized business rule constants for the application.
  */
 public class BusinessRules {
     // Business rule constants

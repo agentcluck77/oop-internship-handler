@@ -5,16 +5,13 @@
 public class StudentMenuHandlerFactory implements MenuHandlerFactory {
     private IInternshipManager internshipManager;
     private IApplicationManager applicationManager;
-    private IFilterService filterService;
     private ConsoleUI ui;
 
     public StudentMenuHandlerFactory(IInternshipManager internshipManager,
                                     IApplicationManager applicationManager,
-                                    IFilterService filterService,
                                     ConsoleUI ui) {
         this.internshipManager = internshipManager;
         this.applicationManager = applicationManager;
-        this.filterService = filterService;
         this.ui = ui;
     }
 
@@ -26,6 +23,7 @@ public class StudentMenuHandlerFactory implements MenuHandlerFactory {
     @Override
     public MenuHandler create(User user) {
         Student student = (Student) user;
+        IFilterService filterService = new FilterService();
         StudentController controller = new StudentController(
             student,
             internshipManager,

@@ -53,7 +53,9 @@ public class InternshipManager implements IInternshipManager {
     public int getInternshipCountForCompany(String repId) {
         int count = 0;
         for (Internship internship : internships) {
-            if (internship.getRepId().equals(repId)) {
+            if (internship.getRepId().equals(repId) &&
+                    !internship.getStatus().equals("Rejected") &&
+                    !internship.getStatus().equals("Filled")) {
                 count++;
             }
         }
@@ -111,5 +113,9 @@ public class InternshipManager implements IInternshipManager {
             }
         }
         return null;
+    }
+
+    public void removeInternship(Internship internship) {
+        internships.remove(internship);
     }
 }

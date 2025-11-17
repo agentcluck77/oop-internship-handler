@@ -13,4 +13,5 @@ public interface IInternshipManager {
     List<Internship> getPendingInternships();
     List<Internship> generateReport(String status, String major, String level);
     Internship getInternshipById(int id);
+    void removeInternship(Internship internship);
 }

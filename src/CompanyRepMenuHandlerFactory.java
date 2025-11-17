@@ -6,20 +6,17 @@ public class CompanyRepMenuHandlerFactory implements MenuHandlerFactory {
     private IInternshipManager internshipManager;
     private IApplicationManager applicationManager;
     private IUserManager userManager;
-    private IFilterService filterService;
     private IValidationService validationService;
     private ConsoleUI ui;
 
     public CompanyRepMenuHandlerFactory(IInternshipManager internshipManager,
                                        IApplicationManager applicationManager,
                                        IUserManager userManager,
-                                       IFilterService filterService,
                                        IValidationService validationService,
                                        ConsoleUI ui) {
         this.internshipManager = internshipManager;
         this.applicationManager = applicationManager;
         this.userManager = userManager;
-        this.filterService = filterService;
         this.validationService = validationService;
         this.ui = ui;
     }
@@ -32,6 +29,7 @@ public class CompanyRepMenuHandlerFactory implements MenuHandlerFactory {
     @Override
     public MenuHandler create(User user) {
         CompanyRep rep = (CompanyRep) user;
+        IFilterService filterService = new FilterService();
         CompanyRepController controller = new CompanyRepController(
             rep,
             internshipManager,

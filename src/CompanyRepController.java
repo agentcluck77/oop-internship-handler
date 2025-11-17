@@ -2,9 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller for company representative operations.
- * Extracted from Main.java lines 594-851 to follow Single Responsibility Principle.
- * NOW FOLLOWS DEPENDENCY INVERSION PRINCIPLE using interfaces.
+ * Handles company representative workflows such as posting internships and reviewing applications.
  */
 public class CompanyRepController {
     private CompanyRep rep;
@@ -32,8 +30,7 @@ public class CompanyRepController {
     }
 
     /**
-     * Create a new internship
-     * Extracted from Main.java lines 595-672
+     * Create a new internship posting for the representative's company.
      */
     public void createInternship() {
         if (internshipManager.getInternshipCountForCompany(rep.getUserId()) >= BusinessRules.MAX_INTERNSHIPS_PER_COMPANY) {
@@ -106,8 +103,7 @@ public class CompanyRepController {
     }
 
     /**
-     * View company's internships
-     * Extracted from Main.java lines 685-703
+     * View internships owned by the representative.
      */
     public void viewMyInternships() {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
@@ -131,8 +127,7 @@ public class CompanyRepController {
     }
 
     /**
-     * View applications for a specific internship
-     * Extracted from Main.java lines 705-751
+     * View applications for one of the representative's internships.
      */
     public void viewApplicationsForInternship() {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
@@ -180,8 +175,7 @@ public class CompanyRepController {
     }
 
     /**
-     * Approve or reject an application
-     * Extracted from Main.java lines 753-819
+     * Approve or reject student applications.
      */
     public void approveRejectApplication() {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
@@ -247,8 +241,7 @@ public class CompanyRepController {
     }
 
     /**
-     * Toggle internship visibility
-     * Extracted from Main.java lines 821-851
+     * Toggle internship visibility.
      */
     public void toggleVisibility() {
         List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
@@ -277,6 +270,142 @@ public class CompanyRepController {
             ui.displayMessage("Visibility toggled to: " + (internship.isVisible() ? "On" : "Off"));
         } else {
             ui.displayError("Invalid choice!");
+        }
+    }
+
+    /**
+     * Edit an existing internship (allowed only before approval).
+     */
+    public void editInternship() {
+        Internship internship = selectInternship("edit");
+        if (internship == null) {
+            return;
+        }
+
+        if (!canModify(internship)) {
+            ui.displayError("Only Pending or Rejected internships can be edited.");
+            return;
+        }
+
+        updateInternshipDetails(internship);
+        ui.displayMessage("Internship updated successfully!");
+    }
+
+    /**
+     * Delete an existing internship (allowed only before approval).
+     */
+    public void deleteInternship() {
+        Internship internship = selectInternship("delete");
+        if (internship == null) {
+            return;
+        }
+
+        if (!canModify(internship)) {
+            ui.displayError("Only Pending or Rejected internships can be deleted.");
+            return;
+        }
+
+        applicationManager.removeApplicationsForInternship(internship.getId());
+        internshipManager.removeInternship(internship);
+        ui.displayMessage("Internship deleted.");
+    }
+
+    private Internship selectInternship(String actionVerb) {
+        List<Internship> internships = internshipManager.getInternshipsForCompany(rep.getUserId());
+        internships = filterService.applyFilters(internships);
+
+        if (internships.isEmpty()) {
+            ui.displayMessage("No internships available to " + actionVerb + ".");
+            return null;
+        }
+
+        ui.displayMessage("\n=== My Internships ===");
+        ui.displayActiveFilters(filterService.getActiveFiltersDisplay());
+
+        for (int i = 0; i < internships.size(); i++) {
+            Internship internship = internships.get(i);
+            ui.displayMessage((i + 1) + ". " + internship.getTitle());
+            ui.displayMessage("   Status: " + internship.getStatus());
+        }
+
+        int choice = ui.getIntInput("\nEnter internship number to " + actionVerb + ": ") - 1;
+        if (choice < 0 || choice >= internships.size()) {
+            ui.displayError("Invalid choice!");
+            return null;
+        }
+
+        return internships.get(choice);
+    }
+
+    private boolean canModify(Internship internship) {
+        return internship.getStatus().equals("Pending") || internship.getStatus().equals("Rejected");
+    }
+
+    private void updateInternshipDetails(Internship internship) {
+        String title = ui.getInput("Enter Title (leave blank to keep '" + internship.getTitle() + "'): ").trim();
+        if (!title.isEmpty()) {
+            if (!validationService.isValidFieldLength(title, 1, BusinessRules.MAX_TITLE_LENGTH)) {
+                ui.displayError("Invalid title length. Keeping previous value.");
+            } else {
+                internship.setTitle(title);
+            }
+        }
+
+        String description = ui.getInput("Enter Description (leave blank to keep current): ").trim();
+        if (!description.isEmpty()) {
+            if (!validationService.isValidFieldLength(description, 1, BusinessRules.MAX_DESCRIPTION_LENGTH)) {
+                ui.displayError("Invalid description length. Keeping previous value.");
+            } else {
+                internship.setDescription(description);
+            }
+        }
+
+        String level = ui.getInput("Enter Level (Basic/Intermediate/Advanced) or press Enter to keep " + internship.getLevel() + ": ").trim();
+        if (!level.isEmpty()) {
+            if (validationService.isValidLevel(level)) {
+                String levelLower = level.toLowerCase();
+                internship.setLevel(levelLower.substring(0, 1).toUpperCase() + levelLower.substring(1));
+            } else {
+                ui.displayError("Invalid level. Keeping previous value.");
+            }
+        }
+
+        String major = ui.getInput("Enter Preferred Major (CSC/EEE/MAE) or press Enter to keep " + internship.getPreferredMajor() + ": ").trim();
+        if (!major.isEmpty()) {
+            String upperMajor = major.toUpperCase();
+            if (validationService.isValidMajor(upperMajor)) {
+                internship.setPreferredMajor(upperMajor);
+            } else {
+                ui.displayError("Invalid major. Keeping previous value.");
+            }
+        }
+
+        String openDate = ui.getInput("Enter Opening Date (YYYY-MM-DD) or press Enter to keep " + internship.getOpeningDate() + ": ").trim();
+        String closeDate = ui.getInput("Enter Closing Date (YYYY-MM-DD) or press Enter to keep " + internship.getClosingDate() + ": ").trim();
+        if (!openDate.isEmpty() || !closeDate.isEmpty()) {
+            if (openDate.isEmpty() || closeDate.isEmpty()) {
+                ui.displayError("Both dates must be provided to update. Keeping previous values.");
+            } else if (validationService.isClosingDateValid(openDate, closeDate)) {
+                internship.setOpeningDate(openDate);
+                internship.setClosingDate(closeDate);
+            } else {
+                ui.displayError("Invalid date range. Keeping previous values.");
+            }
+        }
+
+        String slotsInput = ui.getInput("Enter Number of Slots (max " + BusinessRules.MAX_SLOTS_PER_INTERNSHIP +
+            ") or press Enter to keep " + internship.getTotalSlots() + ": ").trim();
+        if (!slotsInput.isEmpty()) {
+            try {
+                int slots = Integer.parseInt(slotsInput);
+                if (slots > 0 && slots <= BusinessRules.MAX_SLOTS_PER_INTERNSHIP) {
+                    internship.setTotalSlots(slots);
+                } else {
+                    ui.displayError("Invalid slot count. Keeping previous value.");
+                }
+            } catch (NumberFormatException e) {
+                ui.displayError("Invalid slot number. Keeping previous value.");
+            }
         }
     }
 

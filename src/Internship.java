@@ -44,24 +44,48 @@ public class Internship {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLevel() {
         return level;
     }
 
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
     public String getPreferredMajor() {
         return preferredMajor;
+    }
+
+    public void setPreferredMajor(String preferredMajor) {
+        this.preferredMajor = preferredMajor;
     }
 
     public String getOpeningDate() {
         return openingDate;
     }
 
+    public void setOpeningDate(String openingDate) {
+        this.openingDate = openingDate;
+    }
+
     public String getClosingDate() {
         return closingDate;
+    }
+
+    public void setClosingDate(String closingDate) {
+        this.closingDate = closingDate;
     }
 
     public String getStatus() {
@@ -82,6 +106,11 @@ public class Internship {
 
     public int getTotalSlots() {
         return totalSlots;
+    }
+
+    public void setTotalSlots(int totalSlots) {
+        this.totalSlots = totalSlots;
+        this.availableSlots = totalSlots;
     }
 
     public int getAvailableSlots() {

@@ -1,8 +1,7 @@
 import java.util.Arrays;
 
 /**
- * Menu handler for student interface.
- * Extracted from Main.java lines 208-259 to separate UI from business logic.
+ * Menu handler for student interactions.
  */
 public class StudentMenuHandler implements MenuHandler {
     private ConsoleUI ui;
@@ -29,8 +28,7 @@ public class StudentMenuHandler implements MenuHandler {
     }
 
     /**
-     * Handle menu choice
-     * Extracted from Main.java lines 222-258
+     * Handle menu choice.
      * @return true to continue, false to logout
      */
     @Override
