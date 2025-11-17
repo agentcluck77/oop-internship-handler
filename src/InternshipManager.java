@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class InternshipManager {
+public class InternshipManager implements IInternshipManager {
     private List<Internship> internships;
 
     public InternshipManager() {

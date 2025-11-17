@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class ApplicationManager {
+public class ApplicationManager implements IApplicationManager {
     private List<Application> applications;
 
     public ApplicationManager() {

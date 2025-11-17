@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class UserManager {
+public class UserManager implements IUserManager {
     private List<User> users;
     private List<CompanyRep> pendingCompanyReps;
 
