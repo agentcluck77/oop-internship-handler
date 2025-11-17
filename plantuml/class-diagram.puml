@@ -1,0 +1,333 @@
+@startuml
+skinparam shadowing false
+skinparam packageStyle Rectangle
+skinparam class {
+  BackgroundColor White
+  ArrowColor #444444
+  BorderColor #0f3c5c
+}
+
+title Internship Placement System - Class Diagram
+
+package "Domain Layer" {
+  class User {
+    - userId: String
+    - password: String
+    - name: String
+    + getUserId(): String
+    + getPassword(): String
+    + setPassword(password: String)
+    + getName(): String
+    + setName(name: String)
+  }
+
+  class Student {
+    - year: int
+    - major: String
+    + getYear(): int
+    + setYear(year: int)
+    + getMajor(): String
+    + setMajor(major: String)
+    + canApplyForLevel(level: String): boolean
+  }
+
+  class CompanyRep {
+    - companyName: String
+    - department: String
+    - position: String
+    - approved: boolean
+    + isApproved(): boolean
+    + setApproved(approved: boolean)
+  }
+
+  class Staff {
+    - department: String
+    - email: String
+    + getDepartment(): String
+    + setDepartment(dept: String)
+    + getEmail(): String
+    + setEmail(email: String)
+  }
+
+  class Internship {
+    - id: int
+    - title: String
+    - description: String
+    - level: String
+    - preferredMajor: String
+    - openingDate: String
+    - closingDate: String
+    - status: String
+    - companyName: String
+    - repId: String
+    - totalSlots: int
+    - availableSlots: int
+    - visible: boolean
+    + setTitle(title: String)
+    + setDescription(desc: String)
+    + setLevel(level: String)
+    + setPreferredMajor(major: String)
+    + setOpeningDate(date: String)
+    + setClosingDate(date: String)
+    + setStatus(status: String)
+    + setTotalSlots(slots: int)
+    + decreaseAvailableSlots()
+    + increaseAvailableSlots()
+    + toggleVisibility()
+    + isOpenForApplications(): boolean
+  }
+
+  class Application {
+    - id: int
+    - studentId: String
+    - internship: Internship
+    - status: String
+    - withdrawalReason: String
+    - withdrawalStatus: String
+    - placementAccepted: boolean
+    + setStatus(status: String)
+    + setWithdrawalReason(reason: String)
+    + setWithdrawalStatus(status: String)
+    + setPlacementAccepted(accepted: boolean)
+  }
+
+  interface IUserManager {
+    + addUser(user: User)
+    + addPendingCompanyRep(rep: CompanyRep)
+    + login(userId: String, password: String): User
+    + getUserById(userId: String): User
+    + getPendingCompanyReps(): List<CompanyRep>
+    + approveCompanyRep(rep: CompanyRep)
+    + rejectCompanyRep(rep: CompanyRep)
+  }
+
+  class UserManager implements IUserManager
+
+  interface IInternshipManager {
+    + addInternship(internship: Internship)
+    + getAllInternships(): List<Internship>
+    + getInternshipsForStudent(student: Student): List<Internship>
+    + getInternshipsForCompany(repId: String): List<Internship>
+    + getInternshipCountForCompany(repId: String): int
+    + getPendingInternships(): List<Internship>
+    + generateReport(status: String, major: String, level: String): List<Internship>
+    + getInternshipById(id: int): Internship
+    + removeInternship(internship: Internship)
+  }
+
+  class InternshipManager implements IInternshipManager
+
+  interface IApplicationManager {
+    + applyForInternship(student: Student, internship: Internship): boolean
+    + hasAppliedToInternship(studentId: String, internshipId: int): boolean
+    + getApplicationCount(studentId: String): int
+    + getApplicationsForStudent(studentId: String): List<Application>
+    + getSuccessfulApplications(studentId: String): List<Application>
+    + getApplicationsForInternship(internshipId: int): List<Application>
+    + updateApplicationStatus(app: Application, status: String)
+    + acceptPlacement(studentId: String, app: Application)
+    + requestWithdrawal(studentId: String, applicationId: int, reason: String): boolean
+    + getWithdrawableApplications(studentId: String): List<Application>
+    + getPendingWithdrawals(): List<Application>
+    + approveWithdrawal(application: Application)
+    + removeApplicationsForInternship(internshipId: int)
+  }
+
+  class ApplicationManager implements IApplicationManager
+}
+
+Student --|> User
+CompanyRep --|> User
+Staff --|> User
+Application --> Internship : references
+InternshipManager --> Internship : «manages»
+ApplicationManager --> Application : «manages»
+UserManager --> CompanyRep : «approves»
+
+package "Boundary Layer" {
+  interface ConsoleUI {
+    + displayMessage(msg: String)
+    + displayError(msg: String)
+    + getInput(prompt: String): String
+    + getIntInput(prompt: String): int
+    + displayMenu(title: String, options: List<String>)
+    + displayInternship(internship: Internship, index: int)
+    + displayApplication(app: Application, index: int, student: Student)
+    + displayActiveFilters(filters: String)
+    + displaySeparator()
+  }
+
+  interface MenuHandler {
+    + show()
+    + handleChoice(): boolean
+  }
+
+  interface MenuHandlerFactory {
+    + create(user: User): MenuHandler
+    + canHandle(user: User): boolean
+  }
+}
+
+package "Application Layer" {
+  class MenuHandlerFactoryRegistry {
+    - factories: List<MenuHandlerFactory>
+    + register(factory: MenuHandlerFactory)
+    + createMenuHandler(user: User): MenuHandler
+  }
+
+  class ApplicationController {
+    - ui: ConsoleUI
+    - authController: AuthenticationController
+    - factoryRegistry: MenuHandlerFactoryRegistry
+    + run()
+  }
+
+  class AuthenticationController {
+    - userManager: IUserManager
+    - validationService: IValidationService
+    - ui: ConsoleUI
+    + login(): User
+    + registerCompanyRep()
+  }
+
+  class StudentController {
+    - student: Student
+    - internshipManager: IInternshipManager
+    - applicationManager: IApplicationManager
+    - filterService: IFilterService
+    - ui: ConsoleUI
+    + viewInternships()
+    + applyForInternship()
+    + viewMyApplications()
+    + acceptPlacement()
+    + requestWithdrawal()
+    + setFilters()
+    + clearFilters()
+    + changePassword(): boolean
+  }
+
+  class CompanyRepController {
+    - rep: CompanyRep
+    - internshipManager: IInternshipManager
+    - applicationManager: IApplicationManager
+    - userManager: IUserManager
+    - filterService: IFilterService
+    - validationService: IValidationService
+    - ui: ConsoleUI
+    + createInternship()
+    + viewMyInternships()
+    + viewApplicationsForInternship()
+    + approveRejectApplication()
+    + toggleVisibility()
+    + editInternship()
+    + deleteInternship()
+    + setFilters()
+    + clearFilters()
+    + changePassword(): boolean
+  }
+
+  class StaffController {
+    - staff: Staff
+    - userManager: IUserManager
+    - internshipManager: IInternshipManager
+    - applicationManager: IApplicationManager
+    - filterService: IFilterService
+    - ui: ConsoleUI
+    + approveRejectCompany()
+    + approveRejectInternship()
+    + approveRejectWithdrawal()
+    + generateReport()
+    + viewAllInternships()
+    + setFilters()
+    + clearFilters()
+    + changePassword(): boolean
+  }
+}
+
+package "Support Services" {
+  class Filter {
+    - status: String
+    - major: String
+    - level: String
+    - closingDate: String
+    + setStatus(status: String)
+    + setMajor(major: String)
+    + setLevel(level: String)
+    + setClosingDate(date: String)
+    + clear()
+    + hasActiveFilters(): boolean
+    + apply(internships: List<Internship>): List<Internship>
+    + getDisplayString(): String
+  }
+
+  interface IFilterService {
+    + setFilters(status: String, major: String, level: String, closingDate: String)
+    + clearFilters()
+    + applyFilters(internships: List<Internship>): List<Internship>
+    + getActiveFiltersDisplay(): String
+    + hasActiveFilters(): boolean
+    + getCurrentFilter(): Filter
+  }
+
+  class FilterService implements IFilterService
+  FilterService --> Filter
+
+  interface IValidationService {
+    + isValidEmail(email: String): boolean
+    + isValidStudentId(studentId: String): boolean
+    + isClosingDateValid(open: String, close: String): boolean
+    + isValidPassword(password: String): boolean
+    + isValidFieldLength(field: String, min: int, max: int): boolean
+    + isValidMajor(major: String): boolean
+    + isValidLevel(level: String): boolean
+  }
+
+  class ValidationService implements IValidationService
+
+  class BusinessRules <<static>> {
+    {static} MAX_APPLICATIONS_PER_STUDENT: int
+    {static} MAX_INTERNSHIPS_PER_COMPANY: int
+    {static} MAX_SLOTS_PER_INTERNSHIP: int
+    {static} MIN_PASSWORD_LENGTH: int
+    {static} MAX_FIELD_LENGTH: int
+    {static} MAX_TITLE_LENGTH: int
+    {static} MAX_DESCRIPTION_LENGTH: int
+    {static} STUDENT_ID_LENGTH: int
+  }
+}
+
+ApplicationController ..> ConsoleUI
+ApplicationController ..> AuthenticationController
+ApplicationController ..> MenuHandlerFactoryRegistry
+MenuHandlerFactoryRegistry ..> MenuHandlerFactory
+
+AuthenticationController ..> IUserManager
+AuthenticationController ..> IValidationService
+AuthenticationController ..> ConsoleUI
+
+StudentController ..> Student
+StudentController ..> IInternshipManager
+StudentController ..> IApplicationManager
+StudentController ..> IFilterService
+StudentController ..> ConsoleUI
+
+CompanyRepController ..> CompanyRep
+CompanyRepController ..> IInternshipManager
+CompanyRepController ..> IApplicationManager
+CompanyRepController ..> IUserManager
+CompanyRepController ..> IFilterService
+CompanyRepController ..> IValidationService
+CompanyRepController ..> ConsoleUI
+
+StaffController ..> Staff
+StaffController ..> IUserManager
+StaffController ..> IInternshipManager
+StaffController ..> IApplicationManager
+StaffController ..> IFilterService
+StaffController ..> ConsoleUI
+
+FilterService ..> IFilterService
+ValidationService ..> IValidationService
+
+@enduml
+
