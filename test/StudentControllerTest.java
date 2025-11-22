@@ -1,6 +1,14 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.Application;
+import model.Internship;
+import model.Student;
+import service.ApplicationManager;
+import service.FilterService;
+import service.InternshipManager;
+import controller.StudentController;
+
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;

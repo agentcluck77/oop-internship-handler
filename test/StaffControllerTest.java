@@ -1,6 +1,16 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.Application;
+import model.Internship;
+import model.Staff;
+import model.Student;
+import service.ApplicationManager;
+import service.FilterService;
+import service.InternshipManager;
+import service.UserManager;
+import controller.StaffController;
+
 import java.util.Arrays;
 import java.util.Collections;
 

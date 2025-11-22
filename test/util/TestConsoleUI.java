@@ -3,6 +3,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import model.Application;
+import model.Internship;
+import model.Student;
+import ui.ConsoleUI;
+
 /**
  * Lightweight ConsoleUI implementation for unit tests.
  * Accepts a queue of predetermined inputs and records all outputs.

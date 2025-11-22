@@ -1,3 +1,22 @@
+import controller.ApplicationController;
+import service.ApplicationManager;
+import service.CSVLoaderService;
+import service.IApplicationManager;
+import service.IInternshipManager;
+import service.IUserManager;
+import service.IValidationService;
+import service.InternshipManager;
+import service.UserManager;
+import service.ValidationService;
+import ui.CompanyRepMenuHandlerFactory;
+import ui.ConsoleUI;
+import ui.ConsoleUIImpl;
+import ui.MenuHandlerFactoryRegistry;
+import ui.StaffMenuHandlerFactory;
+import ui.StudentMenuHandlerFactory;
+import util.BusinessRules;
+import controller.AuthenticationController;
+
 /**
  * Bootstraps the Internship Placement Management System.
  */

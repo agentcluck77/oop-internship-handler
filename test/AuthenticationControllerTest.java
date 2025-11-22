@@ -1,7 +1,18 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import model.CompanyRep;
+import model.Student;
+import model.User;
+import service.ApplicationManager;
+import service.FilterService;
+import service.InternshipManager;
+import service.UserManager;
+import service.ValidationService;
+import controller.AuthenticationController;
+import controller.StudentController;
+
 import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 

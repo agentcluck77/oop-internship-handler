@@ -1,3 +1,8 @@
+import model.CompanyRep;
+import model.Internship;
+import model.Staff;
+import model.Student;
+
 public final class TestFixtures {
     private TestFixtures() {}
 

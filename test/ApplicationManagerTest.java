@@ -1,6 +1,12 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.Application;
+import model.Internship;
+import model.Student;
+import service.ApplicationManager;
+import util.BusinessRules;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ApplicationManagerTest {

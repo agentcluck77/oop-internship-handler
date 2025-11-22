@@ -1,5 +1,25 @@
 import org.junit.jupiter.api.Test;
 
+import controller.ApplicationController;
+import model.Application;
+import model.CompanyRep;
+import model.Internship;
+import model.Staff;
+import model.Student;
+import service.ApplicationManager;
+import service.IApplicationManager;
+import service.IInternshipManager;
+import service.IUserManager;
+import service.IValidationService;
+import service.InternshipManager;
+import service.UserManager;
+import service.ValidationService;
+import ui.CompanyRepMenuHandlerFactory;
+import ui.MenuHandlerFactoryRegistry;
+import ui.StaffMenuHandlerFactory;
+import ui.StudentMenuHandlerFactory;
+import controller.AuthenticationController;
+
 import java.util.Arrays;
 import java.util.List;
 
