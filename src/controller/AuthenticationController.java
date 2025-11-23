@@ -27,27 +27,48 @@ public class AuthenticationController {
      * @return authenticated User or null if login failed
      */
     public User login() {
-        String id = ui.getInput("Enter User ID: ");
-        String password = ui.getInput("Enter Password: ");
+            String id = ui.getInput("Enter User ID: ");
+            String password = ui.getInput("Enter Password: ");
 
-        User user = userManager.login(id, password);
+            // Step 1: Attempt the standard login (returns User on success, null on ANY failure)
+            User user = userManager.login(id, password);
 
-        if (user == null) {
-            ui.displayError("Invalid credentials!");
-            return null;
-        }
+            if (user == null) {
+                // Step 2: If login failed, determine the specific reason using helper functions.
+                // Check if the User ID exists in the approved list.
+                User approvedUser = userManager.getUserById(id);
+                boolean isPending = false;
+                
+                // Check pending list explicitly, as the user could be unapproved.
+                for (CompanyRep rep : userManager.getPendingCompanyReps()) {
+                    if (rep.getUserId().equals(id)) {
+                        isPending = true;
+                        break;
+                    }
+                }
 
-        if (user instanceof CompanyRep) {
-            CompanyRep rep = (CompanyRep) user;
-            if (!rep.isApproved()) {
-                ui.displayMessage("Your registration is awaiting staff approval.");
+                if (approvedUser != null || isPending) {
+                    // SCENARIO: User ID was found (approved or pending), but login failed. 
+                    // This definitively means the password was wrong.
+                    ui.displayError("Invalid credentials: Incorrect Password!");
+                } else {
+                    // SCENARIO: User ID was not found anywhere in the system.
+                    ui.displayError("Invalid credentials: User ID not found!");
+                }
                 return null;
             }
-        }
+            
+            // Step 3: Successful Login Logic (Includes the Company Rep approval check)
+            if (user instanceof CompanyRep rep) { // Using pattern matching for cleaner code
+                if (!rep.isApproved()) {
+                    ui.displayMessage("Your registration is awaiting staff approval.");
+                    return null;
+                }
+            }
 
-        ui.displayMessage("Login successful! Welcome, " + user.getName());
-        return user;
-    }
+            ui.displayMessage("Login successful! Welcome, " + user.getName());
+            return user;
+        }
 
     /**
      * Register a new company representative account.
