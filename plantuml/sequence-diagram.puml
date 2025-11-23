@@ -1,0 +1,164 @@
+@startuml
+title End-to-End Sequence: Registration to Withdrawal
+autonumber
+
+actor CompanyRepApplicant as "Company Rep Applicant"
+actor CompanyRepUser as "Company Rep"
+actor StaffUser as "Staff"
+actor StudentUser as "Student"
+
+participant ConsoleUI
+participant ApplicationController
+participant AuthenticationController
+participant IUserManager as "IUserManager"
+participant IValidationService as "IValidationService"
+participant MenuHandlerFactoryRegistry as "FactoryRegistry"
+participant CompanyRepController
+participant StaffController
+participant StudentController
+participant IInternshipManager as "InternshipManager"
+participant IApplicationManager as "ApplicationManager"
+participant IFilterService as "FilterService"
+
+== 1. Company Rep Registration ==
+
+CompanyRepApplicant -> ConsoleUI : choose "Register (Company Rep)"
+ConsoleUI -> AuthenticationController : registerCompanyRep()
+AuthenticationController -> ConsoleUI : prompt(email, password, name,...)
+CompanyRepApplicant -> ConsoleUI : provide details
+ConsoleUI -> AuthenticationController : send details
+AuthenticationController -> IValidationService : validate fields
+IValidationService --> AuthenticationController : validation result
+AuthenticationController -> IUserManager : addPendingCompanyRep(rep)
+IUserManager --> AuthenticationController : ack
+AuthenticationController -> ConsoleUI : show "Awaiting approval"
+
+== 2. Login (Staff approves rep, rep logs in) ==
+
+StaffUser -> ConsoleUI : choose "Login"
+ConsoleUI -> ApplicationController : run/login
+ApplicationController -> AuthenticationController : login()
+AuthenticationController -> ConsoleUI : request credentials
+StaffUser -> ConsoleUI : enter staff credentials
+ConsoleUI -> AuthenticationController : credentials
+AuthenticationController -> IUserManager : login(id,pw)
+IUserManager --> AuthenticationController : Staff instance
+AuthenticationController -> ConsoleUI : "Login success"
+AuthenticationController --> ApplicationController : Staff
+ApplicationController -> FactoryRegistry : createMenuHandler(Staff)
+FactoryRegistry --> ApplicationController : Staff menu handler
+ApplicationController -> StaffController : route to staff menu
+
+StaffController -> IUserManager : getPendingCompanyReps()
+IUserManager --> StaffController : pending reps
+StaffController -> ConsoleUI : display pending list
+StaffUser -> ConsoleUI : choose rep + approve
+ConsoleUI -> StaffController : approval choice
+StaffController -> IUserManager : approveCompanyRep(rep)
+IUserManager --> StaffController : rep moved to active
+
+== 3. Company Rep Login & Internship Creation ==
+
+CompanyRepUser -> ConsoleUI : login
+... same login exchange as staff but returning CompanyRep ...
+AuthenticationController --> ApplicationController : CompanyRep
+ApplicationController -> FactoryRegistry : createMenuHandler(rep)
+FactoryRegistry --> ApplicationController : CompanyRep menu handler
+ApplicationController -> CompanyRepController : route to rep menu
+
+CompanyRepUser -> ConsoleUI : choose "Create Internship"
+ConsoleUI -> CompanyRepController : createInternship()
+CompanyRepController -> ConsoleUI : prompt for internship data
+CompanyRepUser -> ConsoleUI : enter details
+CompanyRepController -> IValidationService : validate fields
+IValidationService --> CompanyRepController : ok
+CompanyRepController -> IInternshipManager : addInternship(newPosting)
+IInternshipManager --> CompanyRepController : ack
+CompanyRepController -> ConsoleUI : show "Pending approval"
+
+== 4. Staff Reviews Internship ==
+
+StaffUser -> StaffController : approveRejectInternship()
+StaffController -> IInternshipManager : getPendingInternships()
+IInternshipManager --> StaffController : pending list
+StaffController -> ConsoleUI : present details
+StaffUser -> ConsoleUI : approve posting
+ConsoleUI -> StaffController : approval decision
+StaffController -> IInternshipManager : setStatus(Approved)+setVisible(true)
+
+== 4b. Rep Toggles Visibility ==
+CompanyRepUser -> CompanyRepController : toggleVisibility()
+CompanyRepController -> IInternshipManager : getInternshipsForCompany(repId)
+CompanyRepController -> ConsoleUI : list statuses
+CompanyRepUser -> ConsoleUI : pick internship
+CompanyRepController -> IInternshipManager : toggle visibility flag
+
+== 5. Student Login & Application ==
+
+StudentUser -> ConsoleUI : login (same auth flow returning Student)
+ApplicationController -> FactoryRegistry : createMenuHandler(Student)
+ApplicationController -> StudentController : route
+
+StudentUser -> StudentController : viewInternships()
+StudentController -> IInternshipManager : getInternshipsForStudent(student)
+IInternshipManager --> StudentController : approved & visible list
+StudentController -> IFilterService : applyFilters(list)
+IFilterService --> StudentController : filtered list
+StudentController -> ConsoleUI : render internships
+
+StudentUser -> StudentController : applyForInternship(chosen)
+StudentController -> IApplicationManager : getApplicationCount(studentId)
+IApplicationManager --> StudentController : count
+StudentController -> IApplicationManager : hasAppliedToInternship(studentId, internshipId)
+IApplicationManager --> StudentController : false
+StudentController -> IApplicationManager : applyForInternship(student, internship)
+IApplicationManager --> StudentController : success
+StudentController -> ConsoleUI : show confirmation
+
+== 6. Company Reviews Applications ==
+
+CompanyRepUser -> CompanyRepController : viewApplicationsForInternship()
+CompanyRepController -> IInternshipManager : getInternshipsForCompany(repId)
+CompanyRepController -> ConsoleUI : choose internship
+CompanyRepController -> IApplicationManager : getApplicationsForInternship(internshipId)
+IApplicationManager --> CompanyRepController : list applications
+CompanyRepController -> ConsoleUI : display pending apps
+CompanyRepUser -> ConsoleUI : approve/reject selection
+ConsoleUI -> CompanyRepController : decision
+CompanyRepController -> IApplicationManager : updateApplicationStatus(app,"Successful"/"Unsuccessful")
+
+== 7. Student Accepts Placement ==
+
+StudentUser -> StudentController : acceptPlacement()
+StudentController -> IApplicationManager : getSuccessfulApplications(studentId)
+IApplicationManager --> StudentController : list
+StudentController -> ConsoleUI : show options
+StudentUser -> ConsoleUI : choose offer
+StudentController -> IApplicationManager : acceptPlacement(studentId, app)
+IApplicationManager --> StudentController : ack (other apps withdrawn)
+StudentController -> IInternshipManager : notify internship to decrease slots
+
+== 8. Withdrawal Request & Approval ==
+
+StudentUser -> StudentController : requestWithdrawal()
+StudentController -> IApplicationManager : getWithdrawableApplications(studentId)
+IApplicationManager --> StudentController : eligible apps
+StudentController -> ConsoleUI : prompt for reason
+StudentUser -> ConsoleUI : enter reason
+StudentController -> IApplicationManager : requestWithdrawal(studentId, appId, reason)
+IApplicationManager --> StudentController : pending status
+StudentController -> ConsoleUI : "Awaiting staff approval"
+
+StaffUser -> StaffController : approveRejectWithdrawal()
+StaffController -> IApplicationManager : getPendingWithdrawals()
+IApplicationManager --> StaffController : pending list
+StaffController -> ConsoleUI : display requests
+StaffUser -> ConsoleUI : approve withdrawal
+ConsoleUI -> StaffController : decision
+StaffController -> IApplicationManager : approveWithdrawal(app)
+IApplicationManager --> StaffController : slots adjusted, status Withdrawn
+
+ConsoleUI -> StudentUser : notify withdrawal approved
+
+@enduml
+
